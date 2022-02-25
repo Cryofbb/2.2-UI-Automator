@@ -90,15 +90,6 @@ class ChangeTextTest {
     }
 
     @Test
-    fun testInternetSettings() {
-        waitForPackage(SETTINGS_PACKAGE)
-
-        device.findObject(
-            UiSelector().resourceId("android:id/title").instance(0)
-        ).click()
-    }
-
-    @Test
     fun testChangeText() {
         val packageName = MODEL_PACKAGE
         waitForPackage(packageName)
@@ -110,6 +101,44 @@ class ChangeTextTest {
         assertEquals(result, textToSet)
     }
 
+    @Test
+    fun emptyInput() {
+        val packageName = MODEL_PACKAGE
+        waitForPackage(packageName)
+
+        val initialTextView = device.findObject(By.res(packageName, "textToBeChanged")).text
+        device.findObject(By.res(packageName, "userInput")).text = ""
+        device.findObject(By.res(packageName, "buttonChange")).click()
+
+        val resultTextView = device.findObject(By.res(packageName, "textToBeChanged")).text
+        assertEquals(resultTextView, initialTextView)
+    }
+
+    @Test
+    fun spaceInput() {
+        val packageName = MODEL_PACKAGE
+        waitForPackage(packageName)
+
+        val initialTextView = device.findObject(By.res(packageName, "textToBeChanged")).text
+        device.findObject(By.res(packageName, "userInput")).text = " "
+        device.findObject(By.res(packageName, "buttonChange")).click()
+
+        val resultTextView = device.findObject(By.res(packageName, "textToBeChanged")).text
+        assertEquals(resultTextView, initialTextView)
+    }
+
+    @Test
+    fun newActivity() {
+        val packageName = MODEL_PACKAGE
+        waitForPackage(packageName)
+
+        device.findObject(By.res(packageName, "userInput")).text = textToSet
+        device.findObject(By.res(packageName, "buttonActivity")).click()
+        waitForPackage(packageName)
+
+        val result = device.findObject(By.res(packageName, "text")).text
+        assertEquals(result, textToSet)
+    }
 }
 
 
